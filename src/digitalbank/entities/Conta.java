@@ -1,5 +1,6 @@
 package digitalbank.entities;
 
+import digitalbank.exceptions.ContaException;
 import digitalbank.exceptions.SaldoInsuficienteException;
 import digitalbank.interfaces.ContaMetodo;
 
@@ -23,9 +24,13 @@ public abstract class Conta implements ContaMetodo{
 	}
 
 	@Override
-	public void transferir(double valor, Conta conta) {
-		sacar(valor);
-		conta.depositar(valor);
+	public void transferir(double valor, Conta conta) throws ContaException {
+		if (conta.getClass() != this.getClass()) {
+			sacar(valor);
+			conta.depositar(valor);
+		} else {
+			throw new ContaException("Não é possivel transferir para própria conta");
+		}
 	}
 	@Override
 	public void sacar(double valor) {
